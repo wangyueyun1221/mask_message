@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>app log</title>
+	<meta charset=utf-8>
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+</head>
+<body>   
+ 
+<table class="ui-table border left">
+    <thead>
+        <tr>
+            <th>漏洞</th>
+            <th>风险等级</th>
+            <th>修复建议</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                1
+                <input class="ui-input" type="text" name="q" value="1" style="display: none">
+            </td>
+            <td>
+                2
+                <input class="ui-input" type="text" name="w" value="2" style="display: none">
+            </td>
+            <td>
+                3
+                <input class="ui-input" type="text" name="e" value="3" style="display: none">
+            </td>
+            <td>
+                <button class="ui-button primary small edit" data-log="33" >编辑</button>
+                <button class="ui-button negative small delete">删除</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div class="ui-layer">
+    <div class="mask"></div>
+    <div class="table">
+        <div class="table-cell">
+            <div style="background: #fff;display: inline-block;padding: 2em 4em;pointer-events: auto">
+                编辑成功
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    (function ($) {
+        var modal = {
+            timer: null
+        };
+        modal.show = function () {
+            $('.ui-layer').show();
+            modal.timer = setTimeout(function () {
+                $('.ui-layer').hide();
+            }, 3000);
+        };
+        modal.close = function () {
+            modal.timer && clearTimeout(modal.timer);
+            $('.ui-layer').hide();
+        };
+
+        window.modal = modal;
+    })($);
+    $('tbody').on('click', '.save, .edit', function (e) {
+        e.preventDefault();
+        if ($(this).hasClass('save')) {
+            $(this).removeClass('save').addClass('edit').html('编辑');
+            var trDom = $(this).parents('tr');
+            // trDom.find('input').css('display', 'none');
+            trDom.next().remove();
+            window.modal.show();
+        } else {
+            $(this).removeClass('edit').addClass('save').html('保存');
+            var trDom = $(this).parents('tr');
+            trDom.find('input').css('display', 'block');
+            showLog(trDom, $(this).data('log'));
+        }
+    });
+    $('.ui-layer .mask').click(function (e) {
+        e.preventDefault();
+        window.modal.close();
+    });
+    $('.delete').click(function (e) {
+        e.preventDefault();
+        $(this).parents('tr').remove();
+    });
+    function showLog(that, log) {
+        var html = '<tr>\
+                        <td colspan="4">\
+                            漏洞位置\
+                            <input class="ui-input" type="text" name="r" value="' + log + '">\
+                        </td>\
+                    </tr>';
+        that.after(html);
+    }
+</script>
+</body>
+</html>
